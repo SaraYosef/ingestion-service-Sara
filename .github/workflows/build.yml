@@ -3,7 +3,10 @@ name: Docker Build
 on:
   workflow_dispatch:
   push:
-    branches: [ "wchilins" ]
+    branches: [ "main" ]
+    paths-ignore:
+      - 'infra/k8s/**'
+      - '.github/**'
 
 permissions:
   contents: write
