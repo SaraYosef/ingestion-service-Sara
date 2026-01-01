@@ -13,6 +13,11 @@ jobs:
       image: gcr.io/cloud-builders/docker
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
+        - ${{ github.workspace }}:/github/workspace
+
+    defaults:
+      run:
+        working-directory: /github/workspace
 
     steps:
       - uses: actions/checkout@v4
@@ -49,10 +54,8 @@ jobs:
 
       - name: Commit updated manifest back to repo
         run: |
-          apt-get update && apt-get install -y git
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add infra/k8s/base.yaml
           git commit -m "chore: update ingestion-service image to ${GITHUB_SHA}" || echo "No changes to commit"
           git push origin HEAD:${GITHUB_REF#refs/heads/} --force
-
